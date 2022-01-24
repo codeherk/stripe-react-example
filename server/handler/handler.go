@@ -30,7 +30,6 @@ func CreateCheckoutSession(w http.ResponseWriter, r *http.Request) {
 	// 	http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 	// 	return
 	// }
-	log.Printf("Here")
 	r.ParseForm()
 	log.Printf("REQUESTFORM=%+v\n", r.Form)
 	lookup_key := r.PostFormValue("lookup_key")
@@ -43,7 +42,6 @@ func CreateCheckoutSession(w http.ResponseWriter, r *http.Request) {
 		}),
 	}
 
-	log.Printf("Here 2")
 	i := price.List(params)
 	log.Printf("i : %+v", i)
 
@@ -62,7 +60,6 @@ func CreateCheckoutSession(w http.ResponseWriter, r *http.Request) {
 		// http.(w, "No price found", http.StatusInternalServerError)
 		return
 	}
-	log.Printf("Here 2.5")
 	checkoutParams := &stripe.CheckoutSessionParams{
 		Mode: stripe.String(string(stripe.CheckoutSessionModeSubscription)),
 		LineItems: []*stripe.CheckoutSessionLineItemParams{
@@ -74,7 +71,6 @@ func CreateCheckoutSession(w http.ResponseWriter, r *http.Request) {
 		SuccessURL: stripe.String(domain + "?success=true&session_id={CHECKOUT_SESSION_ID}"),
 		CancelURL:  stripe.String(domain + "?canceled=true"),
 	}
-	log.Printf("Here 3")
 	s, err := session.New(checkoutParams)
 	if err != nil {
 		log.Printf("session.New: %v", err)
@@ -104,6 +100,7 @@ func CreatePortalSession(w http.ResponseWriter, r *http.Request) {
 		ReturnURL: stripe.String(domain),
 	}
 	ps, _ := portalsession.New(params)
+
 	log.Printf("ps.New: %v", ps.URL)
 
 	if err != nil {
